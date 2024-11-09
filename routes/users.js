@@ -63,4 +63,23 @@ router.post('/bookList', function(req, res, next) {
     });
 });
 
+/* Delete books from bookstores collection. */
+router.delete('/bookList/:bookName', function(req, res, next){
+  books.deleteOne({ title: req.params.bookName })
+    .then(result => {
+      if (result.deletedCount > 0) {
+        res.status(200).json({ 
+          message: "Successfully deleted the book!",
+          book: `${req.params.bookName}` 
+        });
+      } 
+      else{
+        res.status(404).send({ message: `Book '${req.params.bookName}' not found.` });
+      }
+    })
+    .catch(err => {
+      console.error("Error deleting book:", err);
+      res.status(500).send({ message: "Error deleting book" });
+    });
+});
 module.exports = router;
